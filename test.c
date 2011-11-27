@@ -78,21 +78,46 @@ task* cree_liste_test()
 {
     task *list = NULL, *prev, *ptask = (task*) malloc(sizeof (task));
     strcpy(ptask->ID,"abc");
-    ptask->duree = 15;
-    ptask->priorite = 2;
+    ptask->duree = 3;
+    ptask->priorite = 1;
     ptask->psuivant = NULL;
     list = ptask;
     prev = ptask;
     ptask = (task*) malloc(sizeof (task));
     strcpy(ptask->ID,"def");
-    ptask->duree = 3;
-    ptask->priorite = 1;
+    ptask->duree = 15;
+    ptask->priorite = 2;
     ptask->psuivant = NULL;
     prev->psuivant = ptask;
     prev = ptask;
     ptask = (task*) malloc(sizeof (task));
     strcpy(ptask->ID,"ghi");
     ptask->duree = 28;
+    ptask->priorite = 3;
+    ptask->psuivant = NULL;
+    prev->psuivant = ptask;
+    return list;
+}
+
+task* cree_liste_test2()
+{
+    task *list = NULL, *prev, *ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"aze");
+    ptask->duree = 6;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    list = ptask;
+    prev = ptask;
+    ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"qsd");
+    ptask->duree = 18;
+    ptask->priorite = 2;
+    ptask->psuivant = NULL;
+    prev->psuivant = ptask;
+    prev = ptask;
+    ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"wxc");
+    ptask->duree = 33;
     ptask->priorite = 3;
     ptask->psuivant = NULL;
     prev->psuivant = ptask;
@@ -132,6 +157,7 @@ void displayDiagnostic(Resultat res)
         default:
             printf("\n\tImpossible d'établir une analyse.\n");
     }
+    printf("\n_________________________________________\n");
 }
 
 Resultat test_cree_tache()
@@ -623,7 +649,7 @@ bool insere_tache_cat3()
 Resultat test_insere_tache_priorite()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(insere_tache_priorite_cat1(),insere_tache_priorite_cat2(),insere_tache_priorite_cat3());
+    return getDiagnostic(insere_tache_priorite_cat3(),insere_tache_priorite_cat2(),insere_tache_priorite_cat1());
 }
 
 bool insere_tache_priorite_cat1()
@@ -638,7 +664,8 @@ bool insere_tache_priorite_cat1()
     printf("list_task : liste non vide\n");
     printf("ptache : tache non nulle\n");
     printf("Debut du test\n");
-    insere_tache_priorite(list,ptask);
+    list = insere_tache_priorite(list,ptask);
+    affiche_liste(list);
     printf("Fin du test\n");
     return true;
 }
@@ -674,68 +701,83 @@ bool insere_tache_priorite_cat3()
 Resultat test_fusion_listes()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(fusion_listes_cat1(),fusion_listes_cat2(),fusion_listes_cat3());
+    return getDiagnostic(fusion_listes_cat3(),fusion_listes_cat2(),fusion_listes_cat1());
+
 }
 
 bool fusion_listes_cat1()
 {
+    task* list1 = cree_liste_test();
+    task* list2 = cree_liste_test2();
     printf("\nparametres :\n");
-    printf("list_task1 :\n");
-    printf("list_task2 :\n");
+    printf("list_task1 : liste non vide\n");
+    printf("list_task2 : liste_non vide\n");
     printf("Debut du test\n");
-    //fusion_listes();
+    list1 = fusion_listes(list1,list2);
+    affiche_liste(list1);
     printf("Fin du test\n");
+    return true;
 }
 
 bool fusion_listes_cat2()
 {
+    task* list1 = cree_liste_test();
     printf("\nparametres :\n");
-    printf("list_task1 :\n");
-    printf("list_task2 :\n");
+    printf("list_task1 : liste non vide\n");
+    printf("list_task2 : liste vide \n");
     printf("Debut du test\n");
-    //fusion_listes();
+    fusion_listes(list1,NULL);
     printf("Fin du test\n");
+    return true;
 }
 
 bool fusion_listes_cat3()
 {
     printf("\nparametres :\n");
-    printf("list_task1 :\n");
-    printf("list_task2 :\n");
+    printf("list_task1 : liste vide\n");
+    printf("list_task2 : liste vide\n");
     printf("Debut du test\n");
-    //fusion_listes();
+    fusion_listes(NULL,NULL);
     printf("Fin du test\n");
+    return true;
 }
 
 Resultat test_MAJ_priorite()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(MAJ_priorite_cat1(),MAJ_priorite_cat2(),MAJ_priorite_cat3());
+    return getDiagnostic(MAJ_priorite_cat3(),MAJ_priorite_cat2(),MAJ_priorite_cat1());
 }
 
 bool MAJ_priorite_cat1()
 {
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : liste non vide\n");
     printf("Debut du test\n");
-    //MAJ_priorite();
+    affiche_liste(list);
+    printf("%d",MAJ_priorite(list));
+    affiche_liste(list);
     printf("Fin du test\n");
+    return true;
 }
 
 bool MAJ_priorite_cat2()
 {
+    task* list = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : liste vide\n");
     printf("Debut du test\n");
-    //MAJ_priorite();
+    MAJ_priorite(list);
     printf("Fin du test\n");
+    return true;
 }
 
 bool MAJ_priorite_cat3()
 {
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : pointeur nul\n");
     printf("Debut du test\n");
-    //MAJ_priorite();
+    MAJ_priorite(NULL);
     printf("Fin du test\n");
+    return true;
 }

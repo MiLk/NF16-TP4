@@ -8,6 +8,7 @@ typedef enum Resultat { Incorrect, Correct, Robuste, Fiable } Resultat;
 typedef enum bool { false, true } bool;
 
 task* cree_liste_test();
+task* cree_liste_test2();
 
 Resultat getDiagnostic(bool defaut, bool particulier, bool usuel);
 void displayDiagnostic(Resultat res);
