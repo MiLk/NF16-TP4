@@ -124,6 +124,17 @@ task* cree_liste_test2()
     return list;
 }
 
+void libere_liste(task* list)
+{
+    if (list != NULL)
+    {
+        task * next = list->psuivant;
+        free(list);
+        return libere_liste(next);
+    } else
+        return list;
+}
+
 Resultat getDiagnostic(bool defaut, bool particulier, bool usuel)
 {
     Resultat R;
@@ -229,6 +240,7 @@ bool cree_liste_cat1()
     printf("Debut du test\n");
     cree_liste(ptask);
     printf("Fin du test\n");
+    libere_liste(ptask);
     return true;
 }
 
@@ -267,6 +279,7 @@ bool affiche_liste_cat1()
     printf("Debut du test\n");
     affiche_liste(list);
     printf("Fin du test\n");
+    libere_liste(list);
     return true;
 }
 
@@ -284,6 +297,7 @@ bool affiche_liste_cat2()
     printf("Debut du test\n");
     affiche_liste(list);
     printf("Fin du test\n");
+    libere_liste(list);
     return true;
 }
 
@@ -318,6 +332,7 @@ bool ajoute_tache_cat1()
     ajoute_tache(list,ptask);
     affiche_liste(list);
     printf("Fin du test\n");
+    libere_liste(list);
     return true;
 }
 
@@ -331,6 +346,7 @@ bool ajoute_tache_cat2()
     ajoute_tache(list,NULL);
     affiche_liste(list);
     printf("Fin du test\n");
+    libere_liste(list);
     return true;
 }
 
@@ -347,6 +363,7 @@ bool ajoute_tache_cat3()
     printf("Debut du test\n");
     ajoute_tache(NULL,ptask);
     printf("Fin du test\n");
+    libere_liste(ptask);
     return true;
 }
 
@@ -421,6 +438,7 @@ bool execute_tache_FIFO_cat1()
     affiche_liste(list);
     printf("Fonctionne en mode LIFO au lieu de FIFO\n");
     printf("Fin du test\n");
+    libere_liste(list);
     return false;
 }
 
@@ -459,6 +477,7 @@ bool depile_tache_cat1()
     printf("Debut du test\n");
     depile_tache(list);
     printf("Fin du test\n");
+    libere_liste(list);
     return true;
 }
 
@@ -615,6 +634,7 @@ bool insere_tache_cat1()
     list = insere_tache(list,ptask);
     affiche_liste(list);
     printf("Fin du test\n");
+    libere_liste(list);
     return true;
 }
 
@@ -627,6 +647,7 @@ bool insere_tache_cat2()
     printf("Debut du test\n");
     printf("L'execution arrete le programme\n");
     printf("Fin du test\n");
+    libere_liste(list);
     return false;
 }
 
@@ -643,6 +664,7 @@ bool insere_tache_cat3()
     printf("Debut du test\n");
     printf("L'execution arrete le programme\n");
     printf("Fin du test\n");
+    libere_liste(ptask);
     return false;
 }
 
@@ -667,6 +689,7 @@ bool insere_tache_priorite_cat1()
     list = insere_tache_priorite(list,ptask);
     affiche_liste(list);
     printf("Fin du test\n");
+    libere_liste(list);
     return true;
 }
 
@@ -679,6 +702,7 @@ bool insere_tache_priorite_cat2()
     printf("Debut du test\n");
     printf("L'execution arrete le programme\n");
     printf("Fin du test\n");
+    libere_liste(list);
     return false;
 }
 
@@ -695,6 +719,7 @@ bool insere_tache_priorite_cat3()
     printf("Debut du test\n");
     printf("L'execution arrete le programme\n");
     printf("Fin du test\n");
+    libere_liste(ptask);
     return false;
 }
 
@@ -716,6 +741,7 @@ bool fusion_listes_cat1()
     list1 = fusion_listes(list1,list2);
     affiche_liste(list1);
     printf("Fin du test\n");
+    libere_liste(list1);
     return true;
 }
 
@@ -758,6 +784,7 @@ bool MAJ_priorite_cat1()
     printf("%d",MAJ_priorite(list));
     affiche_liste(list);
     printf("Fin du test\n");
+    libere_liste(list);
     return true;
 }
 
