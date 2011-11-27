@@ -36,12 +36,49 @@ int main(int argc, char** argv)
             case 4:
                 displayDiagnostic(test_ajoute_tache());
                 break;
+            case 5:
+                displayDiagnostic(test_annule_tache());
+                break;
+            case 6:
+                displayDiagnostic(test_execute_tache_FIFO());
+                break;
+            case 7:
+                displayDiagnostic(test_depile_tache());
+                break;
+            case 8:
+                displayDiagnostic(test_execute_tache_LIFO());
+                break;
             default: stop = 1;
                 break;
         }
     }
 
     return (EXIT_SUCCESS);
+}
+
+task* cree_liste_test()
+{
+    task *list = NULL, *prev, *ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"abc");
+    ptask->duree = 5;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    list = ptask;
+    prev = ptask;
+    ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"def");
+    ptask->duree = 4;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    prev->psuivant = ptask;
+    prev = ptask;
+    ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"ghi");
+    ptask->duree = 3;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    prev->psuivant = ptask;
+    return list;
 }
 
 Resultat getDiagnostic(bool defaut, bool particulier, bool usuel)
@@ -180,19 +217,7 @@ Resultat test_affiche_liste()
 
 bool affiche_liste_cat1()
 {
-    task* list = NULL;
-    task* ptask = (task*) malloc(sizeof (task));
-    strcpy(ptask->ID,"abc");
-    ptask->duree = 5;
-    ptask->priorite = 1;
-    ptask->psuivant = NULL;
-    list = ptask;
-    ptask = (task*) malloc(sizeof (task));
-    strcpy(ptask->ID,"def");
-    ptask->duree = 4;
-    ptask->priorite = 1;
-    ptask->psuivant = NULL;
-    list->psuivant = ptask;
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
     printf("list_task : liste de plusieurs elements\n");
     printf("Debut du test\n");
@@ -296,136 +321,173 @@ bool ajoute_tache_cat3()
 Resultat test_annule_tache()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(annule_tache_cat1(),annule_tache_cat2(),annule_tache_cat3());
+    return getDiagnostic(annule_tache_cat3(),annule_tache_cat2(),annule_tache_cat1());
 }
 
 bool annule_tache_cat1()
 {
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("caract :\n");
+    printf("list_task : liste non vide\n");
+    printf("caract : identifiant existe dans la liste\n");
     printf("Debut du test\n");
-    //annule_tache();
+    affiche_liste(list);
+    annule_tache(list,"def");
+    printf("Il n'est plus possible d'utiliser ou d'afficher la liste\n");
     printf("Fin du test\n");
+    return false;
 }
 
 bool annule_tache_cat2()
 {
+    task *list = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("caract :\n");
+    printf("list_task : liste vide\n");
+    printf("caract : identifiant n'existe pas dans la liste\n");
     printf("Debut du test\n");
-    //annule_tache();
+    annule_tache(list,"ghi");
     printf("Fin du test\n");
+    return true;
 }
 
 bool annule_tache_cat3()
 {
+    task* list = cree_liste_test();
+
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("caract :\n");
+    printf("list_task : pointeur nul\n");
+    printf("caract : identifiant non nul\n");
     printf("Debut du test\n");
-    //annule_tache();
+    annule_tache(NULL,"abc");
     printf("Fin du test\n");
+
+    printf("\nparametres :\n");
+    printf("list_task : liste non vide\n");
+    printf("caract : identifiant n'existe pas dans la liste\n");
+    printf("Debut du test\n");
+    annule_tache(list,"ghi");
+    printf("Fin du test\n");
+    return true;
 }
 
 Resultat test_execute_tache_FIFO()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(execute_tache_FIFO_cat1(),execute_tache_FIFO_cat2(),execute_tache_FIFO_cat3());
+    return getDiagnostic(execute_tache_FIFO_cat3(),execute_tache_FIFO_cat2(),execute_tache_FIFO_cat1());
 }
 
 bool execute_tache_FIFO_cat1()
 {
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
     printf("list_task :\n");
     printf("Debut du test\n");
-    //execute_tache_FIFO();
+    affiche_liste(list);
+    execute_tache_FIFO(list);
+    affiche_liste(list);
+    execute_tache_FIFO(list);
+    affiche_liste(list);
+    printf("Fonctionne en mode LIFO au lieu de FIFO\n");
     printf("Fin du test\n");
+    return false;
 }
 
 bool execute_tache_FIFO_cat2()
 {
+    task* list = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : liste vide\n");
     printf("Debut du test\n");
-    //execute_tache_FIFO();
+    execute_tache_FIFO(list);
     printf("Fin du test\n");
+    return true;
 }
 
 bool execute_tache_FIFO_cat3()
 {
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : pointeur nul\n");
     printf("Debut du test\n");
-    //execute_tache_FIFO();
+    execute_tache_FIFO(NULL);
     printf("Fin du test\n");
+    return true;
 }
 
 Resultat test_depile_tache()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(depile_tache_cat1(),depile_tache_cat2(),depile_tache_cat3());
+    return getDiagnostic(depile_tache_cat3(),depile_tache_cat2(),depile_tache_cat1());
 }
 
 bool depile_tache_cat1()
 {
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
     printf("list_task :\n");
     printf("Debut du test\n");
-    //depile_tache();
+    depile_tache(list);
     printf("Fin du test\n");
+    return true;
 }
 
 bool depile_tache_cat2()
 {
+    task* list = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : liste vide\n");
     printf("Debut du test\n");
-    //depile_tache();
+    depile_tache(list);
     printf("Fin du test\n");
+    return true;
 }
 
 bool depile_tache_cat3()
 {
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : pointeur nul\n");
     printf("Debut du test\n");
-    //depile_tache();
+    depile_tache(NULL);
     printf("Fin du test\n");
+    return true;
 }
 
 Resultat test_execute_tache_LIFO()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(execute_tache_LIFO_cat1(),execute_tache_LIFO_cat2(),execute_tache_LIFO_cat3());
+    return getDiagnostic(execute_tache_LIFO_cat3(),execute_tache_LIFO_cat2(),execute_tache_LIFO_cat1());
 }
 
 bool execute_tache_LIFO_cat1()
 {
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
     printf("list_task :\n");
     printf("Debut du test\n");
-    //execute_tache_LIFO();
+    execute_tache_LIFO(list);
+    printf("Fonctionne en mode FIFO\n");
     printf("Fin du test\n");
+    return false;
 }
 
 bool execute_tache_LIFO_cat2()
 {
+    task* list = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : liste vide\n");
     printf("Debut du test\n");
-    //execute_tache_LIFO();
+    execute_tache_LIFO(list);
     printf("Fin du test\n");
+    return true;
 }
 
 bool execute_tache_LIFO_cat3()
 {
     printf("\nparametres :\n");
-    printf("list_task :\n");
+    printf("list_task : pointeur nul\n");
     printf("Debut du test\n");
-    //execute_tache_LIFO();
+    execute_tache_LIFO(NULL);
     printf("Fin du test\n");
+    return true;
 }
 
 Resultat test_load_data()
