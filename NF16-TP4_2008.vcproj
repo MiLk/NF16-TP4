@@ -184,6 +184,10 @@
 				RelativePath=".\entete.h"
 				>
 			</File>
+			<File
+				RelativePath=".\test.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Fichiers de ressources"

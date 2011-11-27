@@ -1,12 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "entete.h"
+#include "test.h"
 
 int main(int argc, char** argv)
 {
     int n, stop = 0;
-    task *ptask = NULL, *tmp_task = NULL, *list = NULL;
     while (!stop)
     {
         printf("\nChoisir la fonction a tester. 0 pour stopper.\n");
@@ -14,96 +11,30 @@ int main(int argc, char** argv)
         printf("2 - cree_liste.\n");
         printf("3 - affiche_liste.\n");
         printf("4 - ajoute_tache.\n");
+        printf("5 - annule_tache.\n");
+        printf("6 - execute_tache_FIFO.\n");
+        printf("7 - depile_tache.\n");
+        printf("8 - execute_tache_LIFO.\n");
+        printf("9 - load_date.\n");
+        printf("10 - load_data2.\n");
+        printf("11 - insere_tache.\n");
+        printf("12 - insere_tache_priorite.\n");
+        printf("13 - fusion_listes.\n");
+        printf("14 - MAJ_priorite.\n");
         scanf("%d", &n);
         switch (n)
         {
             case 1:
-                // Valeurs courantes
-                ptask = cree_tache("abc",5);
-                if(!(strcmp(ptask->ID,"abc") == 0 && ptask->duree == 6))
-                {
-                    printf("La fonction cree_tache n'est pas correcte.\n");
-                    break;
-                }
-                // Valeurs particulières
-                ptask = cree_tache("abc",NULL);
-                if(!(strcmp(ptask->ID,"abc") == 0 && ptask->duree == 1))
-                {
-                    printf("La fonction cree_tache n'est pas correcte.\n");
-                    break;
-                }
-                printf("La fonction cree_tache est correcte.\n");
-                // Valeurs aberrantes
-                ptask = cree_tache("abc",-5);
-                if(!(ptask->duree >= 0))
-                {
-                    printf("La fonction cree_tache n'est pas robuste.\n");
-                    break;
-                }
-                ptask = cree_tache("abcdefghijklmnopqrstuvxyz",1);
-                if(!(strcmp(ptask->ID,"abcdefghijklmnopqrstuvxyz") == 0))
-                {
-                    printf("La fonction cree_tache n'est pas robuste.\n");
-                    break;
-                }
-                printf("La fonction cree_tache est correcte et robuste, donc fiable.\n");
+                displayDiagnostic(test_cree_tache());
                 break;
             case 2:
-                // Valeurs courantes
-                ptask = cree_tache("abc",5);
-                list = cree_liste(ptask);
-                if(!(list->ID == ptask->ID && list->duree == ptask->duree))
-                {
-                    printf("La fonction cree_liste n'est pas correcte.\n");
-                    break;
-                }
-                // Valeurs aberrantes
-                list = cree_liste(NULL);
-                if(list != NULL)
-                {
-                    printf("La fonction cree_liste n'est pas robuste.\n");
-                    break;
-                }
-                printf("La fonction cree_liste est correcte et robuste, donc fiable.\n");
+                displayDiagnostic(test_cree_liste());
                 break;
             case 3:
-                affiche_liste(NULL);
-                ptask = cree_tache("abc",5);
-                list = cree_liste(ptask);
-                affiche_liste(list);
-                 printf("La fonction affiche_liste est correcte et robuste, donc fiable.\n");
+                displayDiagnostic(test_affiche_liste());
                 break;
             case 4:
-                ptask = cree_tache("abc",5);
-                list = cree_liste(ptask);
-                ptask = cree_tache("def",10);
-                // Valeurs courantes
-                if(ajoute_tache(list,ptask) != 1)
-                {
-                    printf("La fonction ajoute_tache n'est pas correcte.\n");
-                    break;
-                }
-                tmp_task = list;
-                while(tmp_task->psuivant != NULL)
-                    tmp_task = tmp_task->psuivant;
-                if(!(strcmp(ptask->ID,tmp_task->ID) == 0 && ptask->duree == tmp_task->duree))
-                {
-                  printf("La fonction ajoute_tache n'est pas correcte.\n");
-                  break;
-                }
-                printf("La fonction ajoute_tache est correcte.\n");
-                // Valeurs aberrantes
-                if(ajoute_tache(list,NULL) != 0)
-                {
-                    printf("La fonction ajoute_tache n'est pas robuste.\n");
-                    break;
-                }
-                if(ajoute_tache(NULL,ptask) != 0)
-                {
-                    printf("La fonction ajoute_tache n'est pas robuste.\n");
-                    break;
-                }
-                printf("La fonction ajoute_tache est correcte et robuste, donc fiable.\n");
+                displayDiagnostic(test_ajoute_tache());
                 break;
             default: stop = 1;
                 break;
@@ -111,4 +42,595 @@ int main(int argc, char** argv)
     }
 
     return (EXIT_SUCCESS);
+}
+
+Resultat getDiagnostic(bool defaut, bool particulier, bool usuel)
+{
+    Resultat R;
+    if ((usuel == false) || (particulier == false)) R = Incorrect;
+    else R = Correct;
+    if (defaut == true)
+    {
+        if (R == Correct) R = Fiable;
+        else R = Robuste;
+    }
+    return R;
+}
+
+void displayDiagnostic(Resultat res)
+{
+    char msg[] = "\n-> Cette fonction est %s.\n";
+    switch(res)
+    {
+        case Incorrect:
+            printf(msg, "incorrecte");
+            break;
+        case Correct:
+            printf(msg, "correcte");
+            break;
+        case Robuste:
+            printf(msg, "robuste");
+            break;
+        case Fiable:
+            printf(msg, "fiable");
+            break;
+        default:
+            printf("\n\tImpossible d'établir une analyse.\n");
+    }
+}
+
+Resultat test_cree_tache()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(cree_tache_cat3(),cree_tache_cat2(),cree_tache_cat1());
+}
+
+bool cree_tache_cat1()
+{
+    printf("\nparametres :\n");
+    printf("caract : abc\n");
+    printf("duree : 5\n");
+    printf("Debut du test\n");
+    cree_tache("abc",5);
+    printf("Fin du test\n");
+    return false;
+}
+
+bool cree_tache_cat2()
+{
+    printf("\nparametres :\n");
+    printf("caract : abc\n");
+    printf("duree : NULL\n");
+    printf("Debut du test\n");
+    cree_tache("abc",NULL);
+    printf("Fin du test\n");
+    return true;
+}
+
+bool cree_tache_cat3()
+{
+    printf("\nparametres :\n");
+    printf("caract : abcdefghijklmnopqrstuvxyz\n");
+    printf("duree : 1\n");
+    printf("Debut du test\n");
+    cree_tache("abcdefghijklmnopqrstuvxyz",1);
+    printf("Fin du test\n");
+    printf("\nparametres :\n");
+    printf("caract : abc\n");
+    printf("duree : -5\n");
+    printf("Debut du test\n");
+    cree_tache("abc",-5);
+    printf("Fin du test\n");
+    printf("\nparametres :\n");
+    printf("caract : NULL\n");
+    printf("duree : 1\n");
+    printf("Debut du test\n");
+    printf("L'execution arrete le programme\n");
+    printf("Fin du test\n");
+    return false;
+}
+
+Resultat test_cree_liste()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(cree_liste_cat3(),cree_liste_cat2(),cree_liste_cat1());
+}
+
+bool cree_liste_cat1()
+{
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"abc");
+    ptask->duree = 5;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    printf("\nparametres :\n");
+    printf("tache : pointeur de tache non nul\n");
+    printf("Debut du test\n");
+    cree_liste(ptask);
+    printf("Fin du test\n");
+    return true;
+}
+
+bool cree_liste_cat2()
+{
+    task* ptask = NULL;
+    printf("\nparametres :\n");
+    printf("tache : pointeur de tache nul\n");
+    printf("Debut du test\n");
+    cree_liste(ptask);
+    printf("Fin du test\n");
+    return true;
+}
+
+bool cree_liste_cat3()
+{
+    printf("\nparametres :\n");
+    printf("tache : NULL\n");
+    printf("Debut du test\n");
+    cree_liste(NULL);
+    printf("Fin du test\n");
+    return true;
+}
+
+Resultat test_affiche_liste()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(affiche_liste_cat3(),affiche_liste_cat2(),affiche_liste_cat1());
+}
+
+bool affiche_liste_cat1()
+{
+    task* list = NULL;
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"abc");
+    ptask->duree = 5;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    list = ptask;
+    ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"def");
+    ptask->duree = 4;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    list->psuivant = ptask;
+    printf("\nparametres :\n");
+    printf("list_task : liste de plusieurs elements\n");
+    printf("Debut du test\n");
+    affiche_liste(list);
+    printf("Fin du test\n");
+    return true;
+}
+
+bool affiche_liste_cat2()
+{
+    task* list = NULL;
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"abc");
+    ptask->duree = 5;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    list = ptask;
+    printf("\nparametres :\n");
+    printf("list_task : liste d'un seul element\n");
+    printf("Debut du test\n");
+    affiche_liste(list);
+    printf("Fin du test\n");
+    return true;
+}
+
+bool affiche_liste_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task : liste vide\n");
+    printf("Debut du test\n");
+    affiche_liste(NULL);
+    printf("Fin du test\n");
+    return true;
+}
+
+Resultat test_ajoute_tache()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(ajoute_tache_cat3(),ajoute_tache_cat2(),ajoute_tache_cat1());
+}
+
+bool ajoute_tache_cat1()
+{
+    task* list = NULL;
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"abc");
+    ptask->duree = 5;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    list = ptask;
+    ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"def");
+    ptask->duree = 4;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    printf("\nparametres :\n");
+    printf("list_task : liste non vide\n");
+    printf("ptache : tache non nulle\n");
+    printf("Debut du test\n");
+    ajoute_tache(list,ptask);
+    affiche_liste(list);
+    printf("Fin du test\n");
+    return true;
+}
+
+bool ajoute_tache_cat2()
+{
+    task* list = NULL;
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"abc");
+    ptask->duree = 5;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    list = ptask;
+    printf("\nparametres :\n");
+    printf("list_task : liste non vide\n");
+    printf("ptache : tache_nulle\n");
+    printf("Debut du test\n");
+    ajoute_tache(list,NULL);
+    affiche_liste(list);
+    printf("Fin du test\n");
+    return true;
+}
+
+bool ajoute_tache_cat3()
+{
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"abc");
+    ptask->duree = 5;
+    ptask->priorite = 1;
+    ptask->psuivant = NULL;
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("ptache :\n");
+    printf("Debut du test\n");
+    ajoute_tache(NULL,ptask);
+    printf("Fin du test\n");
+    return true;
+}
+
+Resultat test_annule_tache()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(annule_tache_cat1(),annule_tache_cat2(),annule_tache_cat3());
+}
+
+bool annule_tache_cat1()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("caract :\n");
+    printf("Debut du test\n");
+    //annule_tache();
+    printf("Fin du test\n");
+}
+
+bool annule_tache_cat2()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("caract :\n");
+    printf("Debut du test\n");
+    //annule_tache();
+    printf("Fin du test\n");
+}
+
+bool annule_tache_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("caract :\n");
+    printf("Debut du test\n");
+    //annule_tache();
+    printf("Fin du test\n");
+}
+
+Resultat test_execute_tache_FIFO()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(execute_tache_FIFO_cat1(),execute_tache_FIFO_cat2(),execute_tache_FIFO_cat3());
+}
+
+bool execute_tache_FIFO_cat1()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //execute_tache_FIFO();
+    printf("Fin du test\n");
+}
+
+bool execute_tache_FIFO_cat2()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //execute_tache_FIFO();
+    printf("Fin du test\n");
+}
+
+bool execute_tache_FIFO_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //execute_tache_FIFO();
+    printf("Fin du test\n");
+}
+
+Resultat test_depile_tache()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(depile_tache_cat1(),depile_tache_cat2(),depile_tache_cat3());
+}
+
+bool depile_tache_cat1()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //depile_tache();
+    printf("Fin du test\n");
+}
+
+bool depile_tache_cat2()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //depile_tache();
+    printf("Fin du test\n");
+}
+
+bool depile_tache_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //depile_tache();
+    printf("Fin du test\n");
+}
+
+Resultat test_execute_tache_LIFO()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(execute_tache_LIFO_cat1(),execute_tache_LIFO_cat2(),execute_tache_LIFO_cat3());
+}
+
+bool execute_tache_LIFO_cat1()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //execute_tache_LIFO();
+    printf("Fin du test\n");
+}
+
+bool execute_tache_LIFO_cat2()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //execute_tache_LIFO();
+    printf("Fin du test\n");
+}
+
+bool execute_tache_LIFO_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //execute_tache_LIFO();
+    printf("Fin du test\n");
+}
+
+Resultat test_load_data()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(load_data_cat1(),load_data_cat2(),load_data_cat3());
+}
+
+bool load_data_cat1()
+{
+    printf("\nparametres :\n");
+    printf("nom_fichier :\n");
+    printf("Debut du test\n");
+    //load_data();
+    printf("Fin du test\n");
+}
+
+bool load_data_cat2()
+{
+    printf("\nparametres :\n");
+    printf("nom_fichier :\n");
+    printf("Debut du test\n");
+    //load_data();
+    printf("Fin du test\n");
+}
+
+bool load_data_cat3()
+{
+    printf("\nparametres :\n");
+    printf("nom_fichier :\n");
+    printf("Debut du test\n");
+    //load_data();
+    printf("Fin du test\n");
+}
+
+Resultat test_load_data2()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(load_data2_cat1(),load_data2_cat2(),load_data2_cat3());
+}
+
+bool load_data2_cat1()
+{
+    printf("\nparametres :\n");
+    printf("nom_fichier :\n");
+    printf("Debut du test\n");
+    //load_data2();
+    printf("Fin du test\n");
+}
+
+bool load_data2_cat2()
+{
+    printf("\nparametres :\n");
+    printf("nom_fichier :\n");
+    printf("Debut du test\n");
+    //load_data2();
+    printf("Fin du test\n");
+}
+
+bool load_data2_cat3()
+{
+    printf("\nparametres :\n");
+    printf("nom_fichier :\n");
+    printf("Debut du test\n");
+    //load_data2();
+    printf("Fin du test\n");
+}
+
+Resultat test_insere_tache()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(insere_tache_cat1(),insere_tache_cat2(),insere_tache_cat3());
+}
+
+bool insere_tache_cat1()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("ptache :\n");
+    printf("Debut du test\n");
+    //insere_tache();
+    printf("Fin du test\n");
+}
+
+bool insere_tache_cat2()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("ptache :\n");
+    printf("Debut du test\n");
+    //insere_tache();
+    printf("Fin du test\n");
+}
+
+bool insere_tache_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("ptache :\n");
+    printf("Debut du test\n");
+    //insere_tache();
+    printf("Fin du test\n");
+}
+
+Resultat test_insere_tache_priorite()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(insere_tache_priorite_cat1(),insere_tache_priorite_cat2(),insere_tache_priorite_cat3());
+}
+
+bool insere_tache_priorite_cat1()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("ptache :\n");
+    printf("Debut du test\n");
+    //insere_tache_priorite();
+    printf("Fin du test\n");
+}
+
+bool insere_tache_priorite_cat2()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("ptache :\n");
+    printf("Debut du test\n");
+    //insere_tache_priorite();
+    printf("Fin du test\n");
+}
+
+bool insere_tache_priorite_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("ptache :\n");
+    printf("Debut du test\n");
+    //insere_tache_priorite();
+    printf("Fin du test\n");
+}
+
+Resultat test_fusion_listes()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(fusion_listes_cat1(),fusion_listes_cat2(),fusion_listes_cat3());
+}
+
+bool fusion_listes_cat1()
+{
+    printf("\nparametres :\n");
+    printf("list_task1 :\n");
+    printf("list_task2 :\n");
+    printf("Debut du test\n");
+    //fusion_listes();
+    printf("Fin du test\n");
+}
+
+bool fusion_listes_cat2()
+{
+    printf("\nparametres :\n");
+    printf("list_task1 :\n");
+    printf("list_task2 :\n");
+    printf("Debut du test\n");
+    //fusion_listes();
+    printf("Fin du test\n");
+}
+
+bool fusion_listes_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task1 :\n");
+    printf("list_task2 :\n");
+    printf("Debut du test\n");
+    //fusion_listes();
+    printf("Fin du test\n");
+}
+
+Resultat test_MAJ_priorite()
+{
+    printf("\n_________________________________________\n");
+    return getDiagnostic(MAJ_priorite_cat1(),MAJ_priorite_cat2(),MAJ_priorite_cat3());
+}
+
+bool MAJ_priorite_cat1()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //MAJ_priorite();
+    printf("Fin du test\n");
+}
+
+bool MAJ_priorite_cat2()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //MAJ_priorite();
+    printf("Fin du test\n");
+}
+
+bool MAJ_priorite_cat3()
+{
+    printf("\nparametres :\n");
+    printf("list_task :\n");
+    printf("Debut du test\n");
+    //MAJ_priorite();
+    printf("Fin du test\n");
 }
