@@ -48,6 +48,24 @@ int main(int argc, char** argv)
             case 8:
                 displayDiagnostic(test_execute_tache_LIFO());
                 break;
+            case 9:
+                displayDiagnostic(test_load_data());
+                break;
+            case 10:
+                displayDiagnostic(test_load_data2());
+                break;
+            case 11:
+                displayDiagnostic(test_insere_tache());
+                break;
+            case 12:
+                displayDiagnostic(test_insere_tache_priorite());
+                break;
+            case 13:
+                displayDiagnostic(test_fusion_listes());
+                break;
+            case 14:
+                displayDiagnostic(test_MAJ_priorite());
+                break;
             default: stop = 1;
                 break;
         }
@@ -60,22 +78,22 @@ task* cree_liste_test()
 {
     task *list = NULL, *prev, *ptask = (task*) malloc(sizeof (task));
     strcpy(ptask->ID,"abc");
-    ptask->duree = 5;
-    ptask->priorite = 1;
+    ptask->duree = 15;
+    ptask->priorite = 2;
     ptask->psuivant = NULL;
     list = ptask;
     prev = ptask;
     ptask = (task*) malloc(sizeof (task));
     strcpy(ptask->ID,"def");
-    ptask->duree = 4;
+    ptask->duree = 3;
     ptask->priorite = 1;
     ptask->psuivant = NULL;
     prev->psuivant = ptask;
     prev = ptask;
     ptask = (task*) malloc(sizeof (task));
     strcpy(ptask->ID,"ghi");
-    ptask->duree = 3;
-    ptask->priorite = 1;
+    ptask->duree = 28;
+    ptask->priorite = 3;
     ptask->psuivant = NULL;
     prev->psuivant = ptask;
     return list;
@@ -261,15 +279,9 @@ Resultat test_ajoute_tache()
 
 bool ajoute_tache_cat1()
 {
-    task* list = NULL;
+    task* list = cree_liste_test();
     task* ptask = (task*) malloc(sizeof (task));
-    strcpy(ptask->ID,"abc");
-    ptask->duree = 5;
-    ptask->priorite = 1;
-    ptask->psuivant = NULL;
-    list = ptask;
-    ptask = (task*) malloc(sizeof (task));
-    strcpy(ptask->ID,"def");
+    strcpy(ptask->ID,"xfu");
     ptask->duree = 4;
     ptask->priorite = 1;
     ptask->psuivant = NULL;
@@ -285,13 +297,7 @@ bool ajoute_tache_cat1()
 
 bool ajoute_tache_cat2()
 {
-    task* list = NULL;
-    task* ptask = (task*) malloc(sizeof (task));
-    strcpy(ptask->ID,"abc");
-    ptask->duree = 5;
-    ptask->priorite = 1;
-    ptask->psuivant = NULL;
-    list = ptask;
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
     printf("list_task : liste non vide\n");
     printf("ptache : tache_nulle\n");
@@ -493,103 +499,125 @@ bool execute_tache_LIFO_cat3()
 Resultat test_load_data()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(load_data_cat1(),load_data_cat2(),load_data_cat3());
+    return getDiagnostic(load_data_cat3(),load_data_cat2(),load_data_cat1());
 }
 
 bool load_data_cat1()
 {
     printf("\nparametres :\n");
-    printf("nom_fichier :\n");
+    printf("nom_fichier : fichier présent\n");
     printf("Debut du test\n");
-    //load_data();
+    load_data("tasks.dat");
     printf("Fin du test\n");
+    return true;
 }
 
 bool load_data_cat2()
 {
     printf("\nparametres :\n");
-    printf("nom_fichier :\n");
+    printf("nom_fichier : fichier inexistant\n");
     printf("Debut du test\n");
-    //load_data();
+    load_data("test.dat");
     printf("Fin du test\n");
+    return true;
 }
 
 bool load_data_cat3()
 {
     printf("\nparametres :\n");
-    printf("nom_fichier :\n");
+    printf("nom_fichier : valeur nulle\n");
     printf("Debut du test\n");
-    //load_data();
+    printf("Le programme s'arrête\n");
     printf("Fin du test\n");
+    return false;
 }
 
 Resultat test_load_data2()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(load_data2_cat1(),load_data2_cat2(),load_data2_cat3());
+    return getDiagnostic(load_data2_cat3(),load_data2_cat2(),load_data2_cat1());
 }
 
 bool load_data2_cat1()
 {
     printf("\nparametres :\n");
-    printf("nom_fichier :\n");
+    printf("nom_fichier : fichier existant\n");
     printf("Debut du test\n");
-    //load_data2();
+    load_data2("tasksf.dat");
     printf("Fin du test\n");
+    return true;
 }
 
 bool load_data2_cat2()
 {
     printf("\nparametres :\n");
-    printf("nom_fichier :\n");
+    printf("nom_fichier : fichier inexistant\n");
     printf("Debut du test\n");
-    //load_data2();
+    load_data2("test.dat");
     printf("Fin du test\n");
+    return true;
 }
 
 bool load_data2_cat3()
 {
     printf("\nparametres :\n");
-    printf("nom_fichier :\n");
+    printf("nom_fichier : valeur nulle\n");
     printf("Debut du test\n");
-    //load_data2();
+    printf("Le programme s'arrête\n");
     printf("Fin du test\n");
+    return false;
 }
 
 Resultat test_insere_tache()
 {
     printf("\n_________________________________________\n");
-    return getDiagnostic(insere_tache_cat1(),insere_tache_cat2(),insere_tache_cat3());
+    return getDiagnostic(insere_tache_cat3(),insere_tache_cat2(),insere_tache_cat1());
 }
 
 bool insere_tache_cat1()
 {
+    task* list = cree_liste_test();
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"xfu");
+    ptask->duree = 22;
+    ptask->priorite = 2;
+    ptask->psuivant = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("ptache :\n");
+    printf("list_task : liste non vide\n");
+    printf("ptache : tache non nulle\n");
     printf("Debut du test\n");
-    //insere_tache();
+    list = insere_tache(list,ptask);
+    affiche_liste(list);
     printf("Fin du test\n");
+    return true;
 }
 
 bool insere_tache_cat2()
 {
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("ptache :\n");
+    printf("list_task : liste non vide\n");
+    printf("ptache : tache nulle\n");
     printf("Debut du test\n");
-    //insere_tache();
+    printf("L'execution arrete le programme\n");
     printf("Fin du test\n");
+    return false;
 }
 
 bool insere_tache_cat3()
 {
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"xfu");
+    ptask->duree = 22;
+    ptask->priorite = 2;
+    ptask->psuivant = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("ptache :\n");
+    printf("list_task : liste vide\n");
+    printf("ptache : tache non nulle\n");
     printf("Debut du test\n");
-    //insere_tache();
+    printf("L'execution arrete le programme\n");
     printf("Fin du test\n");
+    return false;
 }
 
 Resultat test_insere_tache_priorite()
@@ -600,32 +628,47 @@ Resultat test_insere_tache_priorite()
 
 bool insere_tache_priorite_cat1()
 {
+    task* list = cree_liste_test();
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"xfu");
+    ptask->duree = 22;
+    ptask->priorite = 2;
+    ptask->psuivant = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("ptache :\n");
+    printf("list_task : liste non vide\n");
+    printf("ptache : tache non nulle\n");
     printf("Debut du test\n");
-    //insere_tache_priorite();
+    insere_tache_priorite(list,ptask);
     printf("Fin du test\n");
+    return true;
 }
 
 bool insere_tache_priorite_cat2()
 {
+    task* list = cree_liste_test();
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("ptache :\n");
+    printf("list_task : liste non vide\n");
+    printf("ptache : tache nulle\n");
     printf("Debut du test\n");
-    //insere_tache_priorite();
+    printf("L'execution arrete le programme\n");
     printf("Fin du test\n");
+    return false;
 }
 
 bool insere_tache_priorite_cat3()
 {
+    task* ptask = (task*) malloc(sizeof (task));
+    strcpy(ptask->ID,"xfu");
+    ptask->duree = 22;
+    ptask->priorite = 2;
+    ptask->psuivant = NULL;
     printf("\nparametres :\n");
-    printf("list_task :\n");
-    printf("ptache :\n");
+    printf("list_task : liste vide\n");
+    printf("ptache : tache non nulle\n");
     printf("Debut du test\n");
-    //insere_tache_priorite();
+    printf("L'execution arrete le programme\n");
     printf("Fin du test\n");
+    return false;
 }
 
 Resultat test_fusion_listes()
